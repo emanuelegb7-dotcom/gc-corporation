@@ -46,8 +46,17 @@
 
         @media print {
             .no-print { display: none !important; }
-            body { background: white; padding: 0; }
-            .receipt-container { border: 1px solid #eee; padding: 20px; box-shadow: none; }
+            body { background: white; padding: 0; margin: 0; }
+            .receipt-container { 
+                border: none; 
+                padding: 0; 
+                box-shadow: none;
+                width: 100%;
+                max-width: none;
+            }
+            @page {
+                margin: 1cm;
+            }
         }
 
         .btn-impact {
@@ -137,7 +146,7 @@
         <section id="step-3" class="hidden">
             <div id="printable-receipt" class="receipt-container shadow-2xl">
                 
-                <!-- Cabeçalho Pré-Recibo com Ícone -->
+                <!-- Cabeçalho Pré-Recibo -->
                 <div class="flex flex-col md:flex-row justify-between items-start border-b-4 border-black pb-8 mb-10">
                     <div class="flex items-start gap-4">
                         <div class="w-16 h-16 bg-black text-white flex items-center justify-center font-black text-3xl rounded-xl">G</div>
@@ -213,7 +222,10 @@
                     Confirmar Pedido no WhatsApp
                 </button>
                 <div class="grid grid-cols-2 gap-4">
-                    <button onclick="window.print()" class="py-4 border-2 border-black font-black rounded-2xl text-xs uppercase hover:bg-gray-50 transition-all">Baixar PDF / Imprimir</button>
+                    <button onclick="window.print()" class="py-4 border-2 border-black font-black rounded-2xl text-xs uppercase hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Baixar em PDF
+                    </button>
                     <button onclick="nextStep(2)" class="py-4 bg-gray-100 font-black rounded-2xl text-xs uppercase text-gray-500 hover:bg-gray-200 transition-all">Editar Pedido</button>
                 </div>
             </div>
