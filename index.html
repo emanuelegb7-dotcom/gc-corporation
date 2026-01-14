@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G.CORPORATION - Sistema de Pedidos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f4f4f5;
+            color: #000;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .receipt-container {
+            background: white;
+            padding: 50px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            border: 2px solid #000;
+        }
+
+        .logo-g {
+            width: 60px;
+            height: 60px;
+            background: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+            border-radius: 12px;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            .receipt-container { border: 1px solid #eee; padding: 20px; box-shadow: none; }
+        }
+
+        .btn-impact {
+            background: #000;
+            color: #fff;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-impact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        input:focus {
+            border-color: #000 !important;
+            ring: 0 !important;
+        }
+    </style>
+</head>
+<body class="py-12">
+
+    <div class="max-w-3xl mx-auto px-6">
+        
+        <!-- HEADER COM ÍCONE G -->
+        <header class="text-center mb-12 no-print">
+            <div class="logo-g">G</div>
+            <h1 class="text-4xl font-extrabold tracking-tighter uppercase leading-none">G.CORPORATION</h1>
+            <div class="h-1 w-24 bg-black mx-auto mt-3"></div>
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em] mt-4">Business Management System</p>
+        </header>
+
+        <!-- PASSO 1: IDENTIFICAÇÃO -->
+        <section id="step-1" class="step-card p-10 mb-6">
+            <h2 class="text-xl font-black mb-8 uppercase tracking-tight border-l-4 border-black pl-4">Entrada de Cliente</h2>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase mb-2 tracking-widest">Nome Completo</label>
+                    <input type="text" id="name" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none text-lg font-semibold" placeholder="Ex: João Manuel">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase mb-2 tracking-widest">Telemóvel (9 dígitos)</label>
+                    <div class="flex items-center">
+                         <span class="bg-gray-100 p-4 border-2 border-r-0 border-gray-100 rounded-l-xl font-bold text-gray-500">+244</span>
+                         <input type="tel" id="phone" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="9xxxxxxxx" class="w-full p-4 border-2 border-gray-100 rounded-r-xl outline-none text-lg font-bold">
+                    </div>
+                </div>
+                <button onclick="nextStep(2)" class="w-full py-5 btn-impact rounded-xl text-sm mt-4">Avançar para Pedido</button>
+            </div>
+        </section>
+
+        <!-- PASSO 2: ITENS -->
+        <section id="step-2" class="step-card p-10 mb-6 hidden">
+            <h2 class="text-xl font-black mb-8 uppercase tracking-tight border-l-4 border-black pl-4">Detalhes do Pedido</h2>
+            <div id="items-list" class="space-y-4">
+                <div class="grid grid-cols-12 gap-3 item-row bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <div class="col-span-12 md:col-span-6">
+                        <label class="text-[9px] font-bold uppercase text-gray-400">Artigo / Serviço</label>
+                        <input type="text" placeholder="O que deseja?" class="w-full p-2 bg-transparent border-b-2 border-gray-200 outline-none item-name font-bold">
+                    </div>
+                    <div class="col-span-4 md:col-span-2">
+                        <label class="text-[9px] font-bold uppercase text-gray-400 text-center block">Qtd</label>
+                        <input type="number" value="1" class="w-full p-2 bg-transparent border-b-2 border-gray-200 text-center item-qty font-bold">
+                    </div>
+                    <div class="col-span-6 md:col-span-3">
+                        <label class="text-[9px] font-bold uppercase text-gray-400 text-right block">Preço Estimado</label>
+                        <input type="number" placeholder="Kz" class="w-full p-2 bg-transparent border-b-2 border-gray-200 text-right item-price font-bold">
+                    </div>
+                    <div class="col-span-2 md:col-span-1 flex items-end justify-end">
+                        <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-2 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex flex-col gap-4">
+                <button onclick="addItem()" class="text-xs font-black uppercase text-gray-500 hover:text-black tracking-widest flex items-center justify-center gap-2">
+                    <span class="text-lg">+</span> Adicionar outro item
+                </button>
+                <button onclick="generateReceipt()" class="w-full py-5 btn-impact rounded-xl text-sm mt-4">Finalizar Pré-Recibo</button>
+            </div>
+        </section>
+
+        <!-- PASSO 3: PRÉ-RECIBO FINAL -->
+        <section id="step-3" class="hidden">
+            <div id="printable-receipt" class="receipt-container shadow-2xl">
+                
+                <!-- Cabeçalho Pré-Recibo com Ícone -->
+                <div class="flex flex-col md:flex-row justify-between items-start border-b-4 border-black pb-8 mb-10">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 bg-black text-white flex items-center justify-center font-black text-3xl rounded-xl">G</div>
+                        <div>
+                            <h2 class="text-3xl font-black uppercase tracking-tighter leading-none mb-2">G.CORPORATION</h2>
+                            <p class="text-[10px] font-bold text-gray-500 tracking-[0.2em] mb-4 uppercase">Business & Services • Luanda</p>
+                            <div class="bg-black text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest inline-block">Pré-Recibo Oficial</div>
+                        </div>
+                    </div>
+                    <div class="text-right mt-6 md:mt-0">
+                        <p class="text-[10px] font-black uppercase text-gray-400">Nº de Controlo</p>
+                        <p class="text-2xl font-black" id="r-id">#G0000</p>
+                        <p class="text-[10px] font-bold text-gray-500" id="r-date"></p>
+                    </div>
+                </div>
+
+                <!-- Info Cliente -->
+                <div class="grid grid-cols-2 gap-4 mb-10">
+                    <div class="bg-gray-50 p-6 rounded-2xl">
+                        <p class="text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Cliente Requisitante</p>
+                        <p class="font-black text-xl uppercase" id="r-name"></p>
+                        <p class="text-sm font-bold text-gray-500" id="r-phone"></p>
+                    </div>
+                    <div class="flex flex-col justify-center items-end text-right">
+                         <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-bold">G</div>
+                    </div>
+                </div>
+
+                <!-- Tabela -->
+                <table class="w-full mb-10">
+                    <thead>
+                        <tr class="border-b-2 border-gray-100 text-gray-400 uppercase text-[9px] font-black tracking-widest">
+                            <th class="text-left py-4">Descrição do Artigo</th>
+                            <th class="text-center py-4">Qtd</th>
+                            <th class="text-right py-4">Preço Est.</th>
+                            <th class="text-right py-4">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="r-items" class="text-sm">
+                        <!-- Itens aqui -->
+                    </tbody>
+                </table>
+
+                <!-- Total -->
+                <div class="flex justify-end mb-16">
+                    <div class="w-full md:w-1/2 bg-black text-white p-6 rounded-2xl flex justify-between items-center">
+                        <span class="text-xs font-black uppercase tracking-widest">Total Estimado</span>
+                        <span class="text-2xl font-black" id="r-total">0 Kz</span>
+                    </div>
+                </div>
+
+                <!-- Rodapé -->
+                <div class="text-center space-y-6">
+                    <div class="bg-[#FFFBEB] border-2 border-[#FEF3C7] p-5 rounded-2xl">
+                        <p class="text-sm font-black uppercase tracking-tight text-[#92400E]">
+                            Aguarde nos nossos terminais pelo vosso pedido
+                        </p>
+                    </div>
+                    
+                    <div class="border-t-2 border-dashed border-gray-200 pt-6">
+                        <p class="text-[11px] font-black text-red-600 uppercase animate-pulse mb-2">
+                            ATT: ENVIAR ESTE PRÉ-RECIBO NO WHATSAPP 952771708
+                        </p>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase">G.CORPORATION MANAGEMENT • LUANDA - ANGOLA</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="mt-10 flex flex-col gap-4 no-print pb-20">
+                <button onclick="sendWhatsApp()" class="w-full py-5 bg-[#25D366] text-white font-black rounded-2xl uppercase text-sm tracking-widest shadow-xl flex items-center justify-center gap-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    Confirmar Pedido no WhatsApp
+                </button>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="window.print()" class="py-4 border-2 border-black font-black rounded-2xl text-xs uppercase hover:bg-gray-50 transition-all">Baixar PDF / Imprimir</button>
+                    <button onclick="nextStep(2)" class="py-4 bg-gray-100 font-black rounded-2xl text-xs uppercase text-gray-500 hover:bg-gray-200 transition-all">Editar Pedido</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        function nextStep(step) {
+            if(step === 2) {
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                if(!name || phone.length !== 9) {
+                    alert("Por favor, preencha o Nome e o Telemóvel com 9 dígitos.");
+                    return;
+                }
+            }
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('step-' + step).classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        function addItem() {
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-12 gap-3 item-row bg-gray-50 p-4 rounded-xl border border-gray-100 animate-pulse';
+            row.innerHTML = `
+                <div class="col-span-12 md:col-span-6">
+                    <label class="text-[9px] font-bold uppercase text-gray-400">Artigo / Serviço</label>
+                    <input type="text" placeholder="O que deseja?" class="w-full p-2 bg-transparent border-b-2 border-gray-200 outline-none item-name font-bold">
+                </div>
+                <div class="col-span-4 md:col-span-2">
+                    <label class="text-[9px] font-bold uppercase text-gray-400 text-center block">Qtd</label>
+                    <input type="number" value="1" class="w-full p-2 bg-transparent border-b-2 border-gray-200 text-center item-qty font-bold">
+                </div>
+                <div class="col-span-6 md:col-span-3">
+                    <label class="text-[9px] font-bold uppercase text-gray-400 text-right block">Preço Estimado</label>
+                    <input type="number" placeholder="Kz" class="w-full p-2 bg-transparent border-b-2 border-gray-200 text-right item-price font-bold">
+                </div>
+                <div class="col-span-2 md:col-span-1 flex items-end justify-end">
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:bg-red-50 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+            `;
+            document.getElementById('items-list').appendChild(row);
+            setTimeout(() => row.classList.remove('animate-pulse'), 500);
+        }
+
+        function generateReceipt() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+
+            let total = 0;
+            let rowsHtml = '';
+            let waItems = '';
+            const items = document.querySelectorAll('.item-row');
+
+            items.forEach(row => {
+                const desc = row.querySelector('.item-name').value;
+                const qty = row.querySelector('.item-qty').value;
+                const price = row.querySelector('.item-price').value;
+
+                if(desc && price) {
+                    const subtotal = qty * price;
+                    total += subtotal;
+                    rowsHtml += `
+                        <tr class="border-b border-gray-50">
+                            <td class="py-5 font-bold text-gray-800">${desc}</td>
+                            <td class="py-5 text-center font-bold">${qty}</td>
+                            <td class="py-5 text-right text-gray-500">${Number(price).toLocaleString()} Kz</td>
+                            <td class="py-5 text-right font-black text-gray-900">${subtotal.toLocaleString()} Kz</td>
+                        </tr>
+                    `;
+                    waItems += `- ${qty}x ${desc}: ${subtotal.toLocaleString()} Kz\n`;
+                }
+            });
+
+            if(total === 0) return alert("Por favor, preencha os detalhes do artigo e o preço estimado.");
+
+            document.getElementById('r-name').innerText = name;
+            document.getElementById('r-phone').innerText = "+244 " + phone;
+            document.getElementById('r-id').innerText = "#G" + Math.floor(Math.random()*90000 + 10000);
+            document.getElementById('r-date').innerText = new Date().toLocaleDateString('pt-AO', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            document.getElementById('r-items').innerHTML = rowsHtml;
+            document.getElementById('r-total').innerText = total.toLocaleString() + " Kz";
+
+            window.waMessage = encodeURIComponent(
+                `*G.CORPORATION - PRÉ-RECIBO*\n` +
+                `----------------------------\n` +
+                `*Cliente:* ${name}\n` +
+                `*Contacto:* +244 ${phone}\n\n` +
+                `*PEDIDO REQUISITADO:*\n${waItems}\n` +
+                `*TOTAL ESTIMADO: ${total.toLocaleString()} Kz*\n` +
+                `----------------------------\n` +
+                `_ATT: ENVIAR ESTE PRÉ-RECIBO NO WHATSAPP 952771708_\n` +
+                `_Aguarde nos nossos terminais pelo vosso pedido._`
+            );
+
+            nextStep(3);
+        }
+
+        function sendWhatsApp() {
+            window.open(`https://wa.me/244952771708?text=${window.waMessage}`, '_blank');
+        }
+    </script>
+</body>
+</html>
